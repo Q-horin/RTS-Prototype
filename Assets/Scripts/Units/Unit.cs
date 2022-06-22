@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
+using RTS.Combat;
 
 namespace RTS.Units
 {
@@ -12,6 +13,7 @@ namespace RTS.Units
         [SerializeField] private UnityEvent onSelected = null;
         [SerializeField] private UnityEvent onDeselected = null;
         [SerializeField] private UnitMovement unitMovement = null;
+        [SerializeField] private Targeter targeter = null;
 
         public static event Action<Unit> ServerOnUnitSpawned;
         public static event Action<Unit> ServerOnUnitDespawned;
@@ -20,10 +22,8 @@ namespace RTS.Units
         public static event Action<Unit> AuthorityOnUnitDespawned;
 
 
-        public UnitMovement GetUnitMovement()
-        {
-            return unitMovement;
-        }
+        public UnitMovement GetUnitMovement() => unitMovement;
+        public Targeter GetTargeter() => targeter;
 
         #region Server
 

@@ -4,52 +4,107 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.InputSystem;
 using System;
+using RTS.Networking;
 
 namespace RTS.Units
 {
     public class UnitSelectionHandler : NetworkBehaviour
     {
+        [SerializeField] private RectTransform unitSelectionArea = null;
         [SerializeField] private LayerMask layerMask = new LayerMask();
         private Camera mainCamera;
         public List<Unit> SelectedUnits { get;}= new List<Unit>();
+        private RTSPlayer player;
+        private Vector2 startPosition;
 
         private void Start() 
         {
-            mainCamera = Camera.main;    
+            mainCamera = Camera.main; 
+            
         }
 
         private void Update() 
         {
+            if (player == null)
+            {
+                player = NetworkClient.connection.identity.GetComponent<RTSPlayer>();  
+            }
+
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                //TO DO SELECTION AREA
+                StartSelectionArea();
+            }
+            if (Mouse.current.leftButton.wasReleasedThisFrame)
+            {
+                ClearSelectionArea();
+            }    
+            else if (Mouse.current.leftButton.isPressed)
+            {
+                UpdateSelectionArea();
+            }
+        }
+
+        private void StartSelectionArea()
+        {
+            if (!Keyboard.current.leftShiftKey.isPressed)
+            {
                 foreach (Unit selectedUnit in SelectedUnits)
                 {
                     selectedUnit.Deselected();
                 }
                 SelectedUnits.Clear();
             }
-            if (Mouse.current.leftButton.wasReleasedThisFrame)
-            {
-                ClearSelectionArea();
-            }    
+
+            unitSelectionArea.gameObject.SetActive(true);
+            startPosition = Mouse.current.position.ReadValue();
+            UpdateSelectionArea();
         }
 
         private void ClearSelectionArea()
         {
-            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask)) {return;}
-            if (!hit.collider.TryGetComponent<Unit>(out Unit unit)) {return;}
-            
-            if (!unit.hasAuthority) {return;}
-
-            SelectedUnits.Add(unit);
-
-            foreach (Unit selectedUnit in SelectedUnits)
+            unitSelectionArea.gameObject.SetActive(false);
+            if (unitSelectionArea.sizeDelta.magnitude == 0)
             {
-                selectedUnit.Select();
+                Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+                if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask)) {return;}
+                if (!hit.collider.TryGetComponent<Unit>(out Unit unit)) {return;}
+                
+                if (!unit.hasAuthority) {return;}
+
+                SelectedUnits.Add(unit);
+
+                foreach (Unit selectedUnit in SelectedUnits)
+                {
+                    selectedUnit.Select();
+                }
+                return;
             }
 
+            Vector2 min = unitSelectionArea.anchoredPosition - (unitSelectionArea.sizeDelta / 2);
+            Vector2 max = unitSelectionArea.anchoredPosition + (unitSelectionArea.sizeDelta / 2);
+
+            foreach (Unit unit in player.GetMyUnits())
+            {
+                if (SelectedUnits.Contains(unit)) { continue;}
+
+                Vector3 screenPosition = mainCamera.WorldToScreenPoint(unit.transform.position);
+                if (screenPosition.x > min.x && screenPosition.x < max.x && 
+                    screenPosition.y > min.y && screenPosition.y < max.y)
+                {
+                    SelectedUnits.Add(unit);
+                    unit.Select();
+                }
+            }
+
+        }
+
+        private void UpdateSelectionArea()
+        {
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            float areaWidth = mousePosition.x - startPosition.x;
+            float areaHeigth = mousePosition.y - startPosition.y;
+            unitSelectionArea.sizeDelta = new Vector2(Mathf.Abs(areaWidth), Mathf.Abs(areaHeigth));
+            unitSelectionArea.anchoredPosition = startPosition + new Vector2(areaWidth / 2, areaHeigth / 2);
         }
     }
 }

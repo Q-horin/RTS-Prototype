@@ -28,7 +28,7 @@ namespace RTS.Buildings
         {
             if (eventData.button != PointerEventData.InputButton.Left) {return;}
             if (!hasAuthority) {return;}
-            
+                
             CmdSpawUnits();
         }
 
