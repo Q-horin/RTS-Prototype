@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 4783615796418509}
   - component: {fileID: 3429928605007436877}
   - component: {fileID: 1408885689917076610}
+  - component: {fileID: 4408585890244933895}
   - component: {fileID: 2866134732948369747}
   - component: {fileID: 6194767975659483534}
-  - component: {fileID: 4408585890244933895}
+  - component: {fileID: -4522806711653832694}
   - component: {fileID: 3888874207705088916}
   - component: {fileID: 2505942122526338956}
   m_Layer: 0
@@ -39,6 +40,7 @@ Transform:
   - {fileID: 3472219080641646380}
   - {fileID: 3107479912285262015}
   - {fileID: 2765670645193529047}
+  - {fileID: 5839325060910135180}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -115,6 +117,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!65 &4408585890244933895
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602557392424083945}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.877253, y: 2.2243762, z: 2.5814857}
+  m_Center: {x: -0.0075519085, y: 1.178555, z: 0.03826189}
 --- !u!114 &2866134732948369747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +146,7 @@ MonoBehaviour:
   syncInterval: 0.1
   agent: {fileID: 1408885689917076610}
   targeter: {fileID: 2505942122526338956}
+  chaseRange: 10
 --- !u!114 &6194767975659483534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +161,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  unitMovement: {fileID: 2866134732948369747}
+  targeter: {fileID: 2505942122526338956}
   onSelected:
     m_PersistentCalls:
       m_Calls:
@@ -175,21 +193,26 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  unitMovement: {fileID: 2866134732948369747}
-  targeter: {fileID: 2505942122526338956}
---- !u!65 &4408585890244933895
-BoxCollider:
+--- !u!114 &-4522806711653832694
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602557392424083945}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.877253, y: 2.2243762, z: 2.5814857}
-  m_Center: {x: -0.0075519085, y: 1.178555, z: 0.03826189}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff6c4ef4c9b91a4e910c17aaa751bf1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  targeter: {fileID: 2505942122526338956}
+  projectilePrefab: {fileID: 4147137724796767401, guid: 1c77c980cc8a2b64e817396a28fa2828, type: 3}
+  projectileSpawnPoint: {fileID: 5839325060910135180}
+  fireRange: 11
+  fireRate: 1
+  rotationSpeed: 180
 --- !u!114 &3888874207705088916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,6 +356,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1742185578748624543}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5449236905041367248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5839325060910135180}
+  m_Layer: 0
+  m_Name: ProjectileSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5839325060910135180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5449236905041367248}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.59, z: 2.52}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1742185578748624543}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4009740399291132103
 PrefabInstance:
